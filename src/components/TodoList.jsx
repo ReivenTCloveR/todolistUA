@@ -18,18 +18,64 @@ export function TodoList() {
     
   if (tarea === '') return;
 
-  taskRef.current.value = ''
+  taskRef.current.value = null
 
     setTodos((prevTodos) => {
       const newTask = {
         id: uuid4(),
-        task: tarea
+        task: tarea,
+        completed: false
       }
       return[...prevTodos, newTask] //Investigar
     })
 
   
   }
+
+const cambiarEstadoTarea = (id) =>{
+  /* Tomamos todos los elementos actuales del array */
+  const newTodos = [...todos]
+  //Buscar el elemento con el id dentro del array
+  const todo = newTodos.find((todo)=> todo.id === id)
+  //Cambiar el estado dentro del array
+  todo.completed = !todo.completed
+  //Se actualiza el array con los cambios hechos
+  setTodos(newTodos)
+}
+
+/* Contamos las tareas que se han realizado */
+const contadorTareas = () => {
+  return todos.filter((todo) => !todo.completed).length
+}
+
+/* Mostrar un mensaje según la cantidad de tareas pendientes */
+const ResumenTareas = () => {
+  const cant = contadorTareas()
+
+  if(cant === 0){
+    return(
+      <div className="alert alert-success mt-3">
+        Felicidades no tienes tareas pendientes :3
+      </div>
+    )
+  }
+
+  if(cant === 1){
+    return(
+      <div className="alert alert-info mt-3">
+        Te queda solamente 1 tarea
+      </div>
+    )
+  }
+
+  return(
+    <div className="alert alert-warning mt-3">
+      Te quedan {cant} tareas pendientes
+    </div>
+  )
+
+}
+
   return (
     <Fragment>
       <h1>Lista de Tareas</h1>
@@ -45,9 +91,12 @@ export function TodoList() {
       <ul className="list-group">
         {/* recorrer la lista */}
         {todos.map((todo) => (
-          <TodoItem todo={todo} key={todo.id} />
+          <TodoItem todo={todo} key={todo.id} cambiarEstado={cambiarEstadoTarea}/>
         ))}
       </ul>
+
+            <ResumenTareas />
+
     </Fragment>
   );
 }
