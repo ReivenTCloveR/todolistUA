@@ -9,19 +9,25 @@ import { TodoItem } from "./TodoItem";
 /* Exportar TodoList */
 export function TodoList() {
   const [todos, setTodos] = useState([
-    { id: 1, task: "Tarea 1" },
-    { id: 2, task: "Tarea 2" },
-    { id: 3, task: "Tarea 3" },
-    { id: 4, task: "Tarea 4" },
   ]);
 
   const taskRef = useRef()
 
   const addTask = () => {
     const tarea = taskRef.current.value.trim();
-    var id = uuid4();
-    alert("Agregando tarea:   "+tarea)
-    alert("ID:   "+id)
+    
+  if (tarea === '') return;
+
+  taskRef.current.value = ''
+
+    setTodos((prevTodos) => {
+      const newTask = {
+        id: uuid4(),
+        task: tarea
+      }
+      return[...prevTodos, newTask] //Investigar
+    })
+
   
   }
   return (
